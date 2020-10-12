@@ -4,7 +4,7 @@ import venv
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        prog="venv creator",
+        prog="JAVEC",
         description="""Creates virtual Python environment in
              current directory."""
         )
