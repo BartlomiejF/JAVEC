@@ -5,8 +5,7 @@ import venv
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         prog="JAVEC",
-        description="""Creates virtual Python environment in
-             current directory."""
+        description="""Just another virtual environment creator."""
         )
 
     parser.add_argument(
