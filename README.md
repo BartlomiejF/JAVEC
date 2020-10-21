@@ -36,9 +36,15 @@ Running main.py with -g argument:
 
 In addition to creation of virtual environment it causes creation of .gitignore file. The .gitignore file is a copy of gitignore_example provided in the repository. It was taken from [this repository](https://github.com/github/gitignore).
 
+### --swap-gitignore path
+It is possible to change the gitignore_example from this repository file with one you commonly use by using --swap-gitignore path:
+
+    python3 /path/to/JAVEC/main.py --swap-gitignore /path/to/your/own/.gitignore
+
+If used with -g argument the first action will be swapping gitignore_example and then creation of .gitignore in the current working directory.
+
 ## TODO
 1. package the tool
-2. cli gitignore_example edition
 
 ## Further simplification
 To avoid typing 
