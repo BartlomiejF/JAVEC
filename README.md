@@ -36,12 +36,19 @@ Running main.py with -g argument:
 
 In addition to creation of virtual environment it causes creation of .gitignore file. The .gitignore file is a copy of gitignore_example provided in the repository. It was taken from [this repository](https://github.com/github/gitignore).
 
-### --swap-gitignore path
+### --swap-gitignore <path>
 It is possible to change the gitignore_example from this repository file with one you commonly use by using --swap-gitignore path:
 
     python3 /path/to/JAVEC/main.py --swap-gitignore /path/to/your/own/.gitignore
 
 If used with -g argument the first action will be swapping gitignore_example and then creation of .gitignore in the current working directory.
+
+### -i, --install <packages>
+Install given packages. This argument will simply call the following command:
+
+    /path/to/virtualenvironment/bin/python3 -m pip install <packages>
+
+Moreover packages names will be added to requirements_javec.txt file.
 
 ## TODO
 1. package the tool

@@ -1,6 +1,7 @@
 import pathlib
 import argparse
 import venv
+import subprocess
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -26,6 +27,14 @@ if __name__ == "__main__":
         help="""Choose your own .gitignore file. This file will change the
         default .gitignore file used in JAVEC.""",
         default=None,
+    )
+
+    parser.add_argument(
+        "-i",
+        "--install",
+        required=False,
+        nargs="*",
+        help="""Install given packages and put them in requirements_javec.txt"""
     )
 
     args = parser.parse_args()
@@ -66,3 +75,16 @@ if __name__ == "__main__":
         with open(gitignorePath, "w") as f:
             f.write("".join(gitignoreToWrite))
         print("Gitignore file created")
+
+    if args.install:
+        if len(args.install) > 0:
+            completed = subprocess.run(
+                [f"{virtualenvDirectory}/bin/python3", "-m", "pip", "install", *args.install],
+                capture_output=True,
+            )
+            print(completed.stdout.decode("utf-8"))
+            if not completed.stderr:
+                with open("requirements_javec.txt", "a") as f:
+                    f.write("".join([f"{package}\n" for package in args.install]))
+        else:
+            print("Nothing to install.")
