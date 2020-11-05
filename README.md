@@ -48,7 +48,8 @@ Install given packages. This argument will simply call the following command:
 
     /path/to/virtualenvironment/bin/python3 -m pip install <packages>
 
-Moreover packages names will be added to requirements_javec.txt file.
+Moreover packages names will be added to requirements_javec.txt file. There is no need to previously activate the virtual environment but you have to call
+it from the parent directory(where JAVEC created the virtual environment)
 
 ## TODO
 1. package the tool
