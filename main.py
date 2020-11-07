@@ -37,6 +37,15 @@ if __name__ == "__main__":
         help="""Install given packages and put them in requirements_javec.txt"""
     )
 
+    parser.add_argument(
+        "-r",
+        "-u",
+        "--uninstall",
+        "--remove",
+        nargs="*",
+        help="""Remove given packages."""
+    )
+
     args = parser.parse_args()
     currentDirectory = pathlib.Path.cwd()
     virtualenvDirectory = pathlib.Path(
@@ -51,9 +60,13 @@ if __name__ == "__main__":
         print(f"Virtual environment already created at {virtualenvDirectory}")
 
     if args.a:
-        with open(".activator.sh", "w") as f:
-            f.write(f"source {virtualenvDirectory}/bin/activate")
-        print("Virtual environment activator created")
+        activatorPath = currentDirectory/".activator.sh"
+        if activatorPath.exists():
+            print("Virtual environment activator already exists.")
+        else:
+            with open(activatorPath, "w") as f:
+                f.write(f"source {virtualenvDirectory}/bin/activate")
+            print("Virtual environment activator created")
 
     if args.swap_gitignore:
         newGitignoreExamplePath = pathlib.Path(args.swap_gitignore)
@@ -68,13 +81,16 @@ if __name__ == "__main__":
             print("New .gitignore path does not exist.")
 
     if args.gitignore:
-        exampleGitignorePath = pathlib.Path(__file__).parent/"gitignore_example"
         gitignorePath = currentDirectory/".gitignore"
-        with open(exampleGitignorePath, "r") as f:
-            gitignoreToWrite = f.readlines()
-        with open(gitignorePath, "w") as f:
-            f.write("".join(gitignoreToWrite))
-        print("Gitignore file created")
+        if gitignorePath.exists():
+            print(".gitignore already exists.")
+        else:
+            exampleGitignorePath = pathlib.Path(__file__).parent/"gitignore_example"
+            with open(exampleGitignorePath, "r") as f:
+                gitignoreToWrite = f.readlines()
+            with open(gitignorePath, "w") as f:
+                f.write("".join(gitignoreToWrite))
+            print("Gitignore file created")
 
     if args.install:
         if len(args.install) > 0:
@@ -83,8 +99,29 @@ if __name__ == "__main__":
                 capture_output=True,
             )
             print(completed.stdout.decode("utf-8"))
+            print(completed.stderr.decode("utf-8"))
             if not completed.stderr:
-                with open("requirements_javec.txt", "a") as f:
-                    f.write("".join([f"{package}\n" for package in args.install]))
+                with open("requirements_javec.txt", "r") as f:
+                    installedPackages = {x.strip() for x in f.readlines()}
+                with open("requirements_javec.txt", "w") as f:
+                    for package in args.install:
+                        installedPackages.add(f"{package}")
+                    f.write("".join([f"{package}\n" for package in installedPackages]))
         else:
             print("Nothing to install.")
+
+    if args.uninstall:
+        if len(args.uninstall) > 0:
+            completed = subprocess.run(
+                [f"{virtualenvDirectory}/bin/python3", "-m", "pip", "uninstall", "-y", *args.uninstall],
+                capture_output=True,
+            )
+            print(completed.stdout.decode("utf-8"))
+            print(completed.stderr.decode("utf-8"))
+            if not completed.stderr:
+                with open("requirements_javec.txt", "r") as f:
+                    installedPackages = {x.strip() for x in f.readlines()}
+                with open("requirements_javec.txt", "w") as f:
+                    for package in args.uninstall:
+                        installedPackages.discard(f"{package}")
+                    f.write("".join([f"{package}\n" for package in installedPackages]))
