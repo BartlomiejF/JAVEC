@@ -2,6 +2,7 @@ import pathlib
 import argparse
 import venv
 import subprocess
+import re
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -44,6 +45,12 @@ if __name__ == "__main__":
         "--remove",
         nargs="*",
         help="""Remove given packages."""
+    )
+
+    parser.add_argument(
+        "--versionRequirements",
+        action="store_true",
+        help="""Create requirements with package version"""
     )
 
     args = parser.parse_args()
@@ -119,9 +126,34 @@ if __name__ == "__main__":
             print(completed.stdout.decode("utf-8"))
             print(completed.stderr.decode("utf-8"))
             if not completed.stderr:
-                with open("requirements_javec.txt", "r") as f:
-                    installedPackages = {x.strip() for x in f.readlines()}
+                if (currentDirectory/"requirements_javec.txt").exists():
+                    with open("requirements_javec.txt", "r") as f:
+                        installedPackages = {x.strip() for x in f.readlines()}
+                else:
+                    installedPackages = set()
                 with open("requirements_javec.txt", "w") as f:
                     for package in args.uninstall:
                         installedPackages.discard(f"{package}")
                     f.write("".join([f"{package}\n" for package in installedPackages]))
+
+    if args.versionRequirements:
+        completed = subprocess.run(
+            [f"{virtualenvDirectory}/bin/python3", "-m", "pip", "freeze"],
+            capture_output=True
+        )
+        print(completed.stderr.decode("utf-8"))
+        if not completed.stderr:
+            pipFreezeOutput = completed.stdout.decode("utf-8")
+            installedPackagesVersion = set()
+            if (currentDirectory/"requirements_javec.txt").exists():
+                with open("requirements_javec.txt", "r") as f:
+                    installedPackages = {x.strip() for x in f.readlines()}
+            else:
+                installedPackages = set()
+            for package in installedPackages:
+                installedPackagesVersion.add(
+                    re.search(f"{package}.+?(?=\\n)", pipFreezeOutput).group(0)
+                )
+            with open("requirements.txt", "w") as f:
+                f.write("".join([f"{package}\n" for package in installedPackagesVersion]))
+            print("Requirements file created.")

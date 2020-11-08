@@ -7,7 +7,7 @@ Clone the repository
 
     git clone https://github.com/BartlomiejF/JAVEC
 
-The code is based on Python standard library so no additional packages are required
+The code is based on Python standard library so no additional packages are required.
 
 ## Usage
 
@@ -58,6 +58,14 @@ Uninstall given packages. This will simply call the following command:
 
 Moreover packages names will be removed from requirements_javec.txt file. There is no need to previously activate the virtual environment but you have to call
 it from the parent directory(where JAVEC created the virtual environment)
+
+### --versionRequirements
+Create requirements.txt file with package version number. This calls following command:
+
+    /path/to/virtualenvironment/bin/python3 -m pip freeze
+
+The output is then filtered with package names installed with this tool (from requirements_javec.txt). requirements.txt will contain only package names that
+you installed using JAVEC.
 
 ## TODO
 1. package the tool
