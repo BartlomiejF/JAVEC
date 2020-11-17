@@ -68,7 +68,8 @@ The output is then filtered with package names installed with this tool (from re
 you installed using JAVEC.
 
 ## TODO
-1. package the tool
+1. Package the tool
+2. Testing
 
 ## Further simplification
 To avoid typing 

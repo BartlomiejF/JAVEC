@@ -3,6 +3,7 @@ import argparse
 import venv
 import subprocess
 import re
+import os
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -59,6 +60,10 @@ if __name__ == "__main__":
         currentDirectory,
         f".{currentDirectory.stem}"
         )
+    if os.name == "posix":
+        pythonExecutable = "python3"
+    elif os.name == "nt":
+        pythonExecutable = "python.exe"
 
     if not virtualenvDirectory.exists():
         builder = venv.EnvBuilder(with_pip=True, system_site_packages=True)
@@ -102,7 +107,7 @@ if __name__ == "__main__":
     if args.install:
         if len(args.install) > 0:
             completed = subprocess.run(
-                [f"{virtualenvDirectory}/bin/python3", "-m", "pip", "install", *args.install],
+                [f"{virtualenvDirectory}/bin/{pythonExecutable}", "-m", "pip", "install", *args.install],
                 capture_output=True,
             )
             print(completed.stdout.decode("utf-8"))
@@ -120,7 +125,7 @@ if __name__ == "__main__":
     if args.uninstall:
         if len(args.uninstall) > 0:
             completed = subprocess.run(
-                [f"{virtualenvDirectory}/bin/python3", "-m", "pip", "uninstall", "-y", *args.uninstall],
+                [f"{virtualenvDirectory}/bin/{pythonExecutable}", "-m", "pip", "uninstall", "-y", *args.uninstall],
                 capture_output=True,
             )
             print(completed.stdout.decode("utf-8"))
@@ -138,7 +143,7 @@ if __name__ == "__main__":
 
     if args.versionRequirements:
         completed = subprocess.run(
-            [f"{virtualenvDirectory}/bin/python3", "-m", "pip", "freeze"],
+            [f"{virtualenvDirectory}/bin/{pythonExecutable}", "-m", "pip", "freeze"],
             capture_output=True
         )
         print(completed.stderr.decode("utf-8"))
