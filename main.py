@@ -66,13 +66,22 @@ if __name__ == "__main__":
         pythonExecutable = "python.exe"
 
     if not virtualenvDirectory.exists():
+        for parent in list(virtualenvDirectory.parents)[:-1]:
+            tempdir = parent/f".{parent.stem}"
+            if not tempdir.exists():
+                continue
+            else:
+                virtualenvDirectory = tempdir
+                break
+
+    if not virtualenvDirectory.exists():
         builder = venv.EnvBuilder(with_pip=True, system_site_packages=True)
         builder.create(virtualenvDirectory)
     else:
         print(f"Virtual environment already created at {virtualenvDirectory}")
 
     if args.a:
-        activatorPath = currentDirectory/".activator.sh"
+        activatorPath = virtualenvDirectory.parent/".activator.sh"
         if activatorPath.exists():
             print("Virtual environment activator already exists.")
         else:
@@ -93,7 +102,7 @@ if __name__ == "__main__":
             print("New .gitignore path does not exist.")
 
     if args.gitignore:
-        gitignorePath = currentDirectory/".gitignore"
+        gitignorePath = virtualenvDirectory.parent/".gitignore"
         if gitignorePath.exists():
             print(".gitignore already exists.")
         else:
@@ -131,12 +140,13 @@ if __name__ == "__main__":
             print(completed.stdout.decode("utf-8"))
             print(completed.stderr.decode("utf-8"))
             if not completed.stderr:
-                if (currentDirectory/"requirements_javec.txt").exists():
-                    with open("requirements_javec.txt", "r") as f:
+                requirementsJavecDirectory = virtualenvDirectory.parent/"requirements_javec.txt"
+                if (requirementsJavecDirectory).exists():
+                    with open(requirementsJavecDirectory, "r") as f:
                         installedPackages = {x.strip() for x in f.readlines()}
                 else:
                     installedPackages = set()
-                with open("requirements_javec.txt", "w") as f:
+                with open(requirementsJavecDirectory, "w") as f:
                     for package in args.uninstall:
                         installedPackages.discard(f"{package}")
                     f.write("".join([f"{package}\n" for package in installedPackages]))
@@ -148,10 +158,11 @@ if __name__ == "__main__":
         )
         print(completed.stderr.decode("utf-8"))
         if not completed.stderr:
+            requirementsJavecDirectory = virtualenvDirectory.parent/"requirements_javec.txt"
             pipFreezeOutput = completed.stdout.decode("utf-8")
             installedPackagesVersion = set()
-            if (currentDirectory/"requirements_javec.txt").exists():
-                with open("requirements_javec.txt", "r") as f:
+            if (requirementsJavecDirectory).exists():
+                with open(requirementsJavecDirectory, "r") as f:
                     installedPackages = {x.strip() for x in f.readlines()}
             else:
                 installedPackages = set()
@@ -159,6 +170,6 @@ if __name__ == "__main__":
                 installedPackagesVersion.add(
                     re.search(f"{package}.+?(?=\\n)", pipFreezeOutput).group(0)
                 )
-            with open("requirements.txt", "w") as f:
+            with open(requirementsJavecDirectory.parent/"requirements.txt", "w") as f:
                 f.write("".join([f"{package}\n" for package in installedPackagesVersion]))
             print("Requirements file created.")
