@@ -4,7 +4,7 @@ with open('README.md', 'r') as f:
     long_description = f.read()
 
 setup(name='javec',
-      version='0.1.1',
+      version='0.1.2',
       description='Just another virtual environment creator',
       url='https://github.com/BartlomiejF/JAVEC',
       author='Bartlomiej Fliszkiewicz',
@@ -16,4 +16,5 @@ setup(name='javec',
         'console_scripts': ['javec=javec.argsHandler:handler']
         },
       long_description=long_description,
+      include_package_data=True,
       )
