@@ -3,18 +3,17 @@ Just another virtual environment creator
 
 ## Installation
 
-Clone the repository
+Install with pip
 
-    git clone https://github.com/BartlomiejF/JAVEC
+    python3 -m pip install javec
 
-The code is based on Python standard library so no additional packages are required.
 
 ## Usage
 
 ### No arguments
 If you run main.py with no additional arguments:
 
-    python3 /path/to/JAVEC/main.py
+    javec
 
 It will create virtual environment in current working directory with the same name as current working directory, but with dot in front (hidden file in Linux). To run the virtual environment run:
 
@@ -23,7 +22,7 @@ It will create virtual environment in current working directory with the same na
 ### -a
 Running main.py with -a argument:
 
-    python3 /path/to/JAVEC/main.py -a
+    javec -a
 
 In addition to creation of virtual environment it causes creation of script shell named ".activator.sh". Now activation of virtual environment will require running following code:
 
@@ -32,14 +31,14 @@ In addition to creation of virtual environment it causes creation of script shel
 ### -g, --gitignore
 Running main.py with -g argument:
 
-    python3 /path/to/JAVEC/main.py -g
+    javec -g
 
 In addition to creation of virtual environment it causes creation of .gitignore file. The .gitignore file is a copy of gitignore_example provided in the repository. It was taken from [this repository](https://github.com/github/gitignore).
 
 ### --swap-gitignore \<path\>
 It is possible to change the gitignore_example from this repository file with one you commonly use by using --swap-gitignore path:
 
-    python3 /path/to/JAVEC/main.py --swap-gitignore /path/to/your/own/.gitignore
+    javec --swap-gitignore /path/to/your/own/.gitignore
 
 If used with -g argument the first action will be swapping gitignore_example and then creation of .gitignore in the current working directory.
 
@@ -66,38 +65,6 @@ Create requirements.txt file with package version number. This calls following c
 
 The output is then filtered with package names installed with this tool (from requirements_javec.txt). requirements.txt will contain only package names that
 you installed using JAVEC.
-
-## TODO
-1. Package the tool
-2. Testing
-
-## Further simplification
-To avoid typing 
-
-    python3 /path/to/JAVEC/main.py
-
-Add an alias to your .bashrc or .bash_aliases by adding:
-
-    alias javec="python3 /path/to/JAVEC/main.py"
-
-then usage would look like:
-
-    javec -a
-    javec -g
-    javec -a -g
-
-or
-
-    alias javec="python3 /path/to/JAVEC/main.py -a"
-
-or 
-
-    alias javec="python3 /path/to/JAVEC/main.py -g"
-
-or 
-
-    alias javec="python3 /path/to/JAVEC/main.py -a -g"
-    
 
 ## Have fun!
 

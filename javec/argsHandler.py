@@ -5,7 +5,8 @@ import subprocess
 import re
 import os
 
-if __name__ == "__main__":
+
+def handler():
     parser = argparse.ArgumentParser(
         prog="JAVEC",
         description="""Just another virtual environment creator.""",
@@ -55,6 +56,7 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
+
     currentDirectory = pathlib.Path.cwd()
     virtualenvDirectory = pathlib.Path(
         currentDirectory,
@@ -65,14 +67,14 @@ if __name__ == "__main__":
     elif os.name == "nt":
         pythonExecutable = "python.exe"
 
-    if not virtualenvDirectory.exists():
-        for parent in list(virtualenvDirectory.parents)[:-1]:
-            tempdir = parent/f".{parent.stem}"
-            if not tempdir.exists():
-                continue
-            else:
-                virtualenvDirectory = tempdir
-                break
+    # if not virtualenvDirectory.exists():
+    #     for parent in list(virtualenvDirectory.parents)[:-1]:
+    #         tempdir = parent/f".{parent.stem}"
+    #         if not tempdir.exists():
+    #             continue
+    #         else:
+    #             virtualenvDirectory = tempdir
+    #             break
 
     if not virtualenvDirectory.exists():
         builder = venv.EnvBuilder(with_pip=True, system_site_packages=True)
