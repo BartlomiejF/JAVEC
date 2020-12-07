@@ -66,6 +66,11 @@ Create requirements.txt file with package version number. This calls following c
 The output is then filtered with package names installed with this tool (from requirements_javec.txt). requirements.txt will contain only package names that
 you installed using JAVEC.
 
+### --print-gitignore
+This argument will print the contents of current gitignore_example that is used to generate .gitignore file with -g command
+
+    javec --print-gitignore
+
 ## Have fun!
 
 [![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)

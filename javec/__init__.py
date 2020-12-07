@@ -1,4 +1,4 @@
-from .argsHandler import handler
+from argsHandler import handler
 
 if __name__ == "__main__":
 

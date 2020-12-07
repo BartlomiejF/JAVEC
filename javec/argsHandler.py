@@ -55,6 +55,12 @@ def handler():
         help="""Create requirements with package version"""
     )
 
+    parser.add_argument(
+        "--print-gitignore",
+        action="store_true",
+        help="Print currently used .gitignore"
+    )
+
     args = parser.parse_args()
 
     currentDirectory = pathlib.Path.cwd()
@@ -175,3 +181,8 @@ def handler():
             with open(requirementsJavecDirectory.parent/"requirements.txt", "w") as f:
                 f.write("".join([f"{package}\n" for package in installedPackagesVersion]))
             print("Requirements file created.")
+
+    if args.print_gitignore:
+        gitignorePath = pathlib.Path(__file__).parent/"gitignore_example"
+        with open(gitignorePath, "r") as f:
+            print(f.read())
