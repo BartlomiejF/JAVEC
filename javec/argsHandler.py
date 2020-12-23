@@ -129,9 +129,11 @@ def handler():
             )
             print(completed.stdout.decode("utf-8"))
             print(completed.stderr.decode("utf-8"))
+            installedPackages = set()
             if not completed.stderr:
-                with open("requirements_javec.txt", "r") as f:
-                    installedPackages = {x.strip() for x in f.readlines()}
+                if (currentDirectory/"requirements_javec.txt").exists():
+                    with open("requirements_javec.txt", "r") as f:
+                        installedPackages = {x.strip() for x in f.readlines()}
                 with open("requirements_javec.txt", "w") as f:
                     for package in args.install:
                         installedPackages.add(f"{package}")
